@@ -19,11 +19,13 @@ from importlib.resources import files
 from pathlib import Path
 from urllib.parse import urlsplit
 
-INK = "#151515"
-RED = "#991B1B"
-MUTED = "#595959"
-PALE = "#F5F3F1"
-RULE = "#DDDAD7"
+INK = "#1D3223"
+MUTED = "#4A6050"
+DEEP_GREEN = "#31573A"
+SAGE = "#A4C39A"
+TINT = "#E2EEDC"
+PALE = "#F1F7EE"
+RULE = "#C9DDC1"
 BLOCKS = {"text", "bullets", "callout", "table", "metrics", "bars", "finding"}
 PRIORITY_ORDER = {
     "p0": 0,
@@ -850,8 +852,11 @@ def pdf_report(data, path):
         )
     W, H, M = 595.276, 841.89, 46
     usable = W - 2 * M
-    ink, red, muted, pale, rule = [colors.HexColor(c) for c in (INK, RED, MUTED, PALE, RULE)]
+    ink, muted, deep_green, sage, tint, pale, rule = map(
+        colors.HexColor, (INK, MUTED, DEEP_GREEN, SAGE, TINT, PALE, RULE)
+    )
     logo = ImageReader(io.BytesIO(asset("automate-seo-logo.png")))
+    logo_width, logo_height = logo.getSize()
     styles = {
         "body": ParagraphStyle(
             "body",
@@ -898,7 +903,7 @@ def pdf_report(data, path):
             fontName="BeyondSans-Bold",
             fontSize=8,
             leading=11,
-            textColor=red,
+            textColor=deep_green,
             spaceAfter=10,
             keepWithNext=True,
         ),
@@ -911,7 +916,7 @@ def pdf_report(data, path):
             splitLongWords=True,
         ),
         "th": ParagraphStyle(
-            "th", fontName="BeyondSans-Bold", fontSize=7.5, leading=11, textColor=colors.white
+            "th", fontName="BeyondSans-Bold", fontSize=7.5, leading=11, textColor=deep_green
         ),
     }
 
@@ -937,55 +942,64 @@ def pdf_report(data, path):
         para.drawOn(c, x, top - height)
         return height
 
-    def cover(c, doc):
-        c.setFillColor(colors.white)
-        c.rect(0, 0, W, H, fill=1, stroke=0)
-        c.drawImage(logo, M - 5, H - 115, width=240, height=240 * 729 / 2157, mask="auto")
-        c.setFillColor(red)
-        c.rect(W - 72, H - 118, 26, 74, fill=1, stroke=0)
+    def header(c, width, top, divider):
+        c.setFillColor(sage)
+        c.rect(0, H - 4, W, 4, fill=1, stroke=0)
+        height = width * logo_height / logo_width
+        c.drawImage(logo, M, H - top - height, width=width, height=height, mask="auto")
         c.setStrokeColor(rule)
-        c.line(M, H - 136, W - M, H - 136)
-        canvas_text(c, "SEARCH INTELLIGENCE", M, H - 154, 310, 8, bold=True)
-        canvas_text(c, data["date"], W - 155, H - 154, 109, 8, muted)
+        c.line(M, H - divider, W - M, H - divider)
+
+    def cover(c, doc):
+        header(c, width=174, top=32, divider=98)
+        canvas_text(c, data["date"], W - M - 142, H - 55, 142, 9, deep_green, maxheight=30)
+        c.setFillColor(pale)
+        c.roundRect(M, 375, usable, 330, 14, fill=1, stroke=1)
+        c.setFillColor(sage)
+        c.roundRect(M + 22, H - 178, 25, 3, 1.5, fill=1, stroke=0)
         canvas_text(
-            c, data.get("label", "STRATEGY & EVIDENCE"), M, H - 218, usable, 8, red, True, 30
+            c,
+            data.get("label", "STRATEGY & EVIDENCE"),
+            M + 57,
+            H - 172,
+            usable - 79,
+            8,
+            deep_green,
+            True,
+            30,
         )
         title_height = canvas_text(
-            c, data["title"], M - 2, H - 251, usable - 20, 44, bold=True, maxheight=164
+            c, data["title"], M + 22, H - 214, usable - 44, 44, bold=True, maxheight=164
         )
         canvas_text(
             c,
             data.get("subtitle", ""),
-            M,
-            H - 270 - title_height,
-            usable - 50,
+            M + 22,
+            H - 230 - title_height,
+            usable - 44,
             12,
             muted,
             maxheight=50,
         )
-        canvas_text(c, "PREPARED FOR", M, 344, usable, 7.5, red, True)
-        canvas_text(c, data["client"], M, 322, usable, 20, bold=True, maxheight=49)
-        canvas_text(c, data.get("website", ""), M, 268, usable, 8.5, muted, maxheight=25)
-        c.setFillColor(ink)
-        c.rect(0, 72, W, 155, fill=1, stroke=0)
-        c.setFillColor(red)
-        c.rect(0, 72, 9, 155, fill=1, stroke=0)
-        canvas_text(c, "THE FOCUS", M, 204, usable, 8, colors.white, True)
-        canvas_text(c, data["summary"], M, 181, usable, 11, colors.white, maxheight=89)
-        canvas_text(c, "INSPECT / COMPARE / IMPROVE", M, 43, 370, 7, muted)
-        canvas_text(c, "AUTOMATE-SEO", W - 123, 43, 100, 7, red, True)
+        canvas_text(c, "PREPARED FOR", M, 343, usable, 7.5, deep_green, True)
+        canvas_text(c, data["client"], M, 321, usable, 20, bold=True, maxheight=49)
+        canvas_text(c, data.get("website", ""), M, 265, usable, 8.5, muted, maxheight=25)
+        c.setFillColor(tint)
+        c.roundRect(M, 72, usable, 146, 10, fill=1, stroke=0)
+        canvas_text(c, "SUMMARY", M + 18, 196, usable - 36, 8, deep_green, True)
+        canvas_text(c, data["summary"], M + 18, 174, usable - 36, 11, maxheight=89)
 
     def page(c, doc):
-        c.drawImage(logo, M - 3, H - 54, width=110, height=110 * 729 / 2157, mask="auto")
-        c.setFillColor(red)
-        c.rect(W - M - 36, H - 44, 36, 19, fill=1, stroke=0)
+        header(c, width=110, top=23, divider=64)
+        c.setFillColor(tint)
+        c.roundRect(W - M - 36, H - 44, 36, 19, 6, fill=1, stroke=0)
         c.setFont("BeyondSans-Bold", 8)
-        c.setFillColor(colors.white)
+        c.setFillColor(deep_green)
         c.drawCentredString(W - M - 18, H - 38, f"{doc.page:02}")
         c.setStrokeColor(rule)
         c.line(M, 48, W - M, 48)
         canvas_text(c, data["client"], M, 37, usable - 105, 6.8, muted, maxheight=18)
-        canvas_text(c, "AUTOMATE-SEO", W - M - 85, 37, 85, 7, red, True)
+        canvas_text(c, "AUTOMATE-SEO", W - M - 85, 37, 85, 7, deep_green, True)
 
     class Doc(BaseDocTemplate):
         def afterFlowable(self, flowable):
@@ -1061,7 +1075,7 @@ def pdf_report(data, path):
             ("LINEBELOW", (0, 0), (-1, -1), 0.4, rule),
         ]
         if header:
-            commands.append(("BACKGROUND", (0, 0), (-1, 0), ink))
+            commands.append(("BACKGROUND", (0, 0), (-1, 0), tint))
         if background:
             commands.append(
                 ("ROWBACKGROUNDS", (0, 1 if header else 0), (-1, -1), [colors.white, pale])
@@ -1085,7 +1099,7 @@ def pdf_report(data, path):
             c.drawRightString(usable, 28, text(self.item["value"]))
             c.setFillColor(pale)
             c.rect(0, 7, usable, 10, fill=1, stroke=0)
-            c.setFillColor(red)
+            c.setFillColor(sage)
             c.rect(0, 7, usable * self.item["value"] / self.maximum, 10, fill=1, stroke=0)
 
     for number, section in enumerate(data["sections"], 1):
@@ -1112,7 +1126,7 @@ def pdf_report(data, path):
                     TableStyle(
                         [
                             ("BACKGROUND", (0, 0), (-1, -1), pale),
-                            ("LINEBEFORE", (0, 0), (0, -1), 3, red),
+                            ("LINEBEFORE", (0, 0), (0, -1), 3, sage),
                         ]
                     )
                 )
@@ -1133,7 +1147,7 @@ def pdf_report(data, path):
                         fontName="BeyondSans-Bold",
                         fontSize=25 if len(text(item["value"])) < 9 else 14,
                         leading=29,
-                        textColor=red,
+                        textColor=deep_green,
                         spaceAfter=9,
                     )
                     cells.append([Paragraph(_e(item["value"]), style), p(item["label"], "cell")])

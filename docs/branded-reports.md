@@ -2,7 +2,7 @@
 
 Use the built-in editorial layout for PDFs, downloadable audits, proposals, strategy reports and recurring reviews. Lead with a clear cover, a short reading guide, useful conclusions, comparable evidence and actions the reader can verify.
 
-The existing automate-SEO logo is included unchanged. Reports use white, near-black and dark red, generous margins, numbered sections, neutral comparison tables, source notes and page numbers. PDF contents link to the actual section pages. Charts are vector graphics; the logo and fonts are embedded. PDF export requires no paid API, browser session, remote fonts or online template account.
+PDFs use a white and soft sage green palette with the original automate-SEO logo at its native proportions. The table of contents links to each section. Charts are vector graphics, and the logo and fonts are embedded. PDF export requires no paid API, browser session, remote fonts or online template account.
 
 ## Generate a report
 
@@ -54,7 +54,7 @@ Required top-level fields: `title`, `client`, `date`, `summary`, `sections`. Opt
 |---|---|---|
 | `text` | `text`, optional `title` | Readable body copy |
 | `bullets` | `items` | Parallel actions or observations |
-| `callout` | `text`, optional `title` | Pale panel with a red rule |
+| `callout` | `text`, optional `title` | Tinted panel with an accent rule |
 | `table` | `columns`, `rows`, optional relative `widths` | Wrapped rows and repeated PDF headings |
 | `metrics` | 1–4 `items` with `label`/`value`, plus `source` | Strong figures with source and coverage notes |
 | `bars` | 1–12 `items` with `label`/nonnegative numeric `value`, plus `source` | Horizontal bars scaled to the largest supplied value; identify units in the title/source |

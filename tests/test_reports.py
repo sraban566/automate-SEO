@@ -338,7 +338,14 @@ class ReportTests(unittest.TestCase):
         self.assertIn("Uncertainty & coverage".upper(), content)
         self.assertIn("https://example.com/services", content)
         self.assertNotIn("\u25a0", content)
-        self.assertTrue(pdf.pages[0].images)
+        for page in (pdf.pages[0], pdf.pages[1]):
+            self.assertEqual(len(page.images), 1)
+            logo_width, logo_height = page.images[0].image.size
+            operations = page.get_contents().operations
+            draw_index = next(i for i, (_, operator) in enumerate(operations) if operator == b"Do")
+            matrix, operator = operations[draw_index - 1]
+            self.assertEqual(operator, b"cm")
+            self.assertAlmostEqual(float(matrix[0] / matrix[3]), logo_width / logo_height, places=5)
         for link in pdf.outline:
             number = pdf.get_destination_page_number(link)
             self.assertIn(link.title[4:], pdf.pages[number].extract_text().replace("\n", " "))
