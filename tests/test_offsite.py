@@ -6,8 +6,8 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from beyondseo import offsite
-from beyondseo.network import utcnow
+from automate_seo import offsite
+from automate_seo.network import utcnow
 
 
 class OffsiteTests(unittest.TestCase):
@@ -170,7 +170,7 @@ class OffsiteTests(unittest.TestCase):
             offsite.preflight(self.folder, "post-002")
 
     def test_private_monitor_reads_campaign_progress_without_exposing_drafts(self):
-        from beyondseo import projects
+        from automate_seo import projects
 
         project = self.root / "project"
         projects.init_project(project, "https://example.com", "Improve search visibility")
@@ -273,7 +273,7 @@ class OffsiteTests(unittest.TestCase):
                 "target_links": links,
                 "checked_at": utcnow(),
             }
-            with patch("beyondseo.backlinks.verify_source", return_value=evidence):
+            with patch("automate_seo.backlinks.verify_source", return_value=evidence):
                 result = offsite.verify(
                     self.folder, "post-001", self.root / ("check-" + str(len(links)))
                 )

@@ -2,7 +2,7 @@
 name: automate-seo
 description: Audit websites, apply authorised SEO improvements and plan content, competitors and backlinks with evidence, design checks and optional project monitoring.
 metadata:
-  version: 3.0.0
+  version: 4.0.0
   author: sraban566
 ---
 

@@ -11,11 +11,11 @@ from urllib.request import Request, urlopen
 
 from bs4 import BeautifulSoup
 
-from beyondseo import projects
-from beyondseo.cli import main
-from beyondseo.network import utcnow
-from beyondseo.onsite import draft_html, plan_html, sitemap_draft
-from beyondseo.publishing import LocalStore, apply_change
+from automate_seo import projects
+from automate_seo.cli import main
+from automate_seo.network import utcnow
+from automate_seo.onsite import draft_html, plan_html, sitemap_draft
+from automate_seo.publishing import LocalStore, apply_change
 
 HTML = b"""<!doctype html><html lang="en"><head><title>Service</title><style>p { max-width: 30em; }</style></head><body><nav><a href="/">Home</a></nav><main><h1>Useful AI services</h1><p id="intro" class="short">We build practical AI tools for small teams and their daily work.</p><p id="linked">Read <a href="/services">our services</a>.</p></main></body></html>"""
 

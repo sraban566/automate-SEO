@@ -1,0 +1,40 @@
+name: Publish container package
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Build and verify the release image
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(python3 -c 'import tomllib; print(tomllib.load(open("pyproject.toml","rb"))["project"]["version"])')"
+          [[ "$GITHUB_REF_NAME" == "v$version" ]]
+          image="ghcr.io/${GITHUB_REPOSITORY,,}:$version"
+          docker build --tag "$image" --label "org.opencontainers.image.version=$version" \
+            --label "org.opencontainers.image.revision=$(git rev-parse HEAD)" .
+          docker run --rm "$image" --version
+          docker run --rm "$image" doctor
+          docker run --rm --entrypoint python "$image" -c \
+            'from playwright.sync_api import sync_playwright; pw = sync_playwright().start(); browser = pw.chromium.launch(); browser.close(); pw.stop()'
+          echo "RELEASE_IMAGE=$image" >> "$GITHUB_ENV"
+      - name: Publish to GitHub Container Registry
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+          docker push "$RELEASE_IMAGE"
+          docker buildx imagetools inspect "$RELEASE_IMAGE"

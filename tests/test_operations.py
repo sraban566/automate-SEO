@@ -8,13 +8,13 @@ from unittest.mock import Mock, patch
 
 from test_crawler import CrawlerTests
 
-from beyondseo.backlinks import check_sources
-from beyondseo.engine import write_json
-from beyondseo.extract import extract
-from beyondseo.monitor import watch
-from beyondseo.network import RobotsRules
-from beyondseo.publishing import LocalStore, RemoteStore, apply_change, digest, stage
-from beyondseo.review import compare, readiness
+from automate_seo.backlinks import check_sources
+from automate_seo.engine import write_json
+from automate_seo.extract import extract
+from automate_seo.monitor import watch
+from automate_seo.network import RobotsRules
+from automate_seo.publishing import LocalStore, RemoteStore, apply_change, digest, stage
+from automate_seo.review import compare, readiness
 
 
 class ReviewTests(unittest.TestCase):
@@ -227,7 +227,7 @@ class PublishingTests(unittest.TestCase):
                 raise OSError("write failure")
             return original_replace(source, target)
 
-        with patch("beyondseo.publishing.os.replace", side_effect=fail_target):
+        with patch("automate_seo.publishing.os.replace", side_effect=fail_target):
             with self.assertRaises(ValueError):
                 apply_change(self.store, self.plan, checksum)
         self.assertEqual(self.file.read_bytes(), before)

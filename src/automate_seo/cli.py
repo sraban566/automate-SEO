@@ -503,8 +503,8 @@ def main(argv=None):
         result = audit_check(args.run, args.report)
         print(json.dumps(result, ensure_ascii=False, indent=2))
         return 0 if result["status"] != "incomplete" else 1
-    from beyondseo.engine import Crawler
-    from beyondseo.network import Config
+    from automate_seo.engine import Crawler
+    from automate_seo.network import Config
 
     crawler = None
     try:

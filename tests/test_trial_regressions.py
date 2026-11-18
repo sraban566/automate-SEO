@@ -7,11 +7,11 @@ from collections import Counter
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-from beyondseo.backlinks import mention_evidence, verify_source
-from beyondseo.engine import Crawler
-from beyondseo.evidence import combined_index_signals, missing_content, selected_data
-from beyondseo.extract import extract, page_findings
-from beyondseo.network import Config
+from automate_seo.backlinks import mention_evidence, verify_source
+from automate_seo.engine import Crawler
+from automate_seo.evidence import combined_index_signals, missing_content, selected_data
+from automate_seo.extract import extract, page_findings
+from automate_seo.network import Config
 
 
 def page(raw, rendered=None):

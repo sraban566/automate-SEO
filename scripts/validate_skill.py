@@ -45,11 +45,11 @@ def validate(source):
     required = (
         "scripts/run.py",
         "scripts/setup.py",
-        "src/beyondseo/cli.py",
-        "src/beyondseo/__init__.py",
-        "src/beyondseo/reports.py",
-        "src/beyondseo/report_assets/automate-seo-logo.png",
-        "src/beyondseo/report_assets/report.css",
+        "src/automate_seo/cli.py",
+        "src/automate_seo/__init__.py",
+        "src/automate_seo/reports.py",
+        "src/automate_seo/report_assets/automate-seo-logo.png",
+        "src/automate_seo/report_assets/report.css",
         "playbooks/backlink-system/posting-sites.json",
     )
     for name in required:

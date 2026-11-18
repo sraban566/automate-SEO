@@ -13,11 +13,18 @@ from unittest.mock import patch
 from urllib.parse import urlsplit
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-from beyondseo import __version__
-from beyondseo.diagnostics import challenge_signal
-from beyondseo.engine import Crawler, csv_value, parse_sitemap
-from beyondseo.extract import extract, index_signals
-from beyondseo.network import Config, RobotsCache, RobotsRules, Transport, addresses, normalize_url
+from automate_seo import __version__
+from automate_seo.diagnostics import challenge_signal
+from automate_seo.engine import Crawler, csv_value, parse_sitemap
+from automate_seo.extract import extract, index_signals
+from automate_seo.network import (
+    Config,
+    RobotsCache,
+    RobotsRules,
+    Transport,
+    addresses,
+    normalize_url,
+)
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -253,7 +260,7 @@ class CrawlerTests(unittest.TestCase):
         for config, resume in ((self.config("/other"), True), (self.config(), False)):
             connection = sqlite3.connect(self.out / "crawl.sqlite3")
             try:
-                with patch("beyondseo.engine.sqlite3.connect", return_value=connection):
+                with patch("automate_seo.engine.sqlite3.connect", return_value=connection):
                     with self.assertRaises(ValueError):
                         Crawler(config, self.out, resume=resume)
                 with self.assertRaises(sqlite3.ProgrammingError):
@@ -275,7 +282,7 @@ class CrawlerTests(unittest.TestCase):
 
     def test_retry_after(self):
         t = Transport(self.config(retries=1))
-        with patch("beyondseo.network.time.sleep") as wait:
+        with patch("automate_seo.network.time.sleep") as wait:
             r = t.fetch(self.root + "/retry")
             self.assertEqual(r.status, 200)
             self.assertEqual(r.attempts, 2)
@@ -412,7 +419,7 @@ class CrawlerTests(unittest.TestCase):
         self.assertTrue(r[self.root]["blocked"])
 
     def test_robots_dns_failure_is_not_described_as_robots_policy(self):
-        from beyondseo.diagnostics import failure_detail, summarize_access
+        from automate_seo.diagnostics import failure_detail, summarize_access
 
         error = "gaierror: [Errno -3] Temporary failure in name resolution"
         robots = {
@@ -444,7 +451,7 @@ class CrawlerTests(unittest.TestCase):
         self.assertEqual(result["robots_retrieval_failures"], {"dns_failure": 1})
 
     def test_name_resolution_wordings_are_dns_failures(self):
-        from beyondseo.diagnostics import failure_detail
+        from automate_seo.diagnostics import failure_detail
 
         for error in (
             "Temporary failure in name resolution",
@@ -543,7 +550,7 @@ class CrawlerTests(unittest.TestCase):
         self.assertEqual(s["access_diagnostics"]["remote_denial_or_challenge_pages"], 0)
 
     def test_recovered_rate_limit_is_retained_in_history(self):
-        with patch("beyondseo.network.time.sleep"):
+        with patch("automate_seo.network.time.sleep"):
             s = self.crawl(self.config("/retry", retries=1, max_pages=1, sitemaps=False))
         self.assertEqual(s["html_documents"], 1)
         self.assertEqual(s["access_diagnostics"]["http_429_attempts_recorded"], 1)

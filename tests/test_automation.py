@@ -9,14 +9,14 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from unittest.mock import patch
 
-from beyondseo.agent_tools import handle_request
-from beyondseo.cli import main
-from beyondseo.entity_graph import graph_audit
-from beyondseo.extract import extract
-from beyondseo.git_patch import git_patch
-from beyondseo.health import evaluate_gate, research_sources, run_audit
-from beyondseo.llms_files import generate, validate_document
-from beyondseo.review import read_pages
+from automate_seo.agent_tools import handle_request
+from automate_seo.cli import main
+from automate_seo.entity_graph import graph_audit
+from automate_seo.extract import extract
+from automate_seo.git_patch import git_patch
+from automate_seo.health import evaluate_gate, research_sources, run_audit
+from automate_seo.llms_files import generate, validate_document
+from automate_seo.review import read_pages
 
 HOST = "https://example.org/"
 ORG = {
@@ -108,8 +108,8 @@ class AutomationTests(unittest.TestCase):
         lead = {"url": "https://example.net/story", "verification": "unverified_lead"}
         with (
             tempfile.TemporaryDirectory() as tmp,
-            patch("beyondseo.discovery.discover") as discover,
-            patch("beyondseo.reputation.reputation") as reputation,
+            patch("automate_seo.discovery.discover") as discover,
+            patch("automate_seo.reputation.reputation") as reputation,
         ):
             discover.return_value = {
                 "status": "leads_available",

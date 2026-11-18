@@ -1,5 +1,12 @@
 # Changelog
 
+## 4.0.0 — First GitHub release
+
+- Package the Python API as `automate_seo`. Change library imports from `beyondseo` to `automate_seo`.
+- Add GitHub release downloads for the installable Python wheel, source distribution, and assistant skill ZIP.
+- Build and verify a versioned GitHub Container Registry image with Chromium and PDF support.
+- Redesign the README with a sample dashboard, installation options, and copyable audit prompts.
+
 ## 3.0.0 — automate-SEO
 
 - Add a unified health pipeline with Markdown, JSON and offline HTML reports.

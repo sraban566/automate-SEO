@@ -243,7 +243,7 @@ class PortabilityTests(unittest.TestCase):
                 self.assertEqual({n.split("/")[0] for n in bundle.namelist()}, {"automate-seo"})
                 self.assertEqual(len(bundle.namelist()), result["archive_files"])
                 self.assertLessEqual(len(bundle.namelist()), result["max_upload_files"])
-                self.assertIn("automate-seo/src/beyondseo/cli.py", bundle.namelist())
+                self.assertIn("automate-seo/src/automate_seo/cli.py", bundle.namelist())
                 self.assertIn(
                     "automate-seo/playbooks/backlink-system/posting-sites.json", bundle.namelist()
                 )
@@ -352,7 +352,7 @@ class PortabilityTests(unittest.TestCase):
             self.assertTrue(zipfile.is_zipfile(archive))
 
     def test_launcher_works_from_unrelated_working_directory(self):
-        from beyondseo import __version__
+        from automate_seo import __version__
 
         result = subprocess.run(
             [sys.executable, str(ROOT / "scripts/run.py"), "--version"],
@@ -381,7 +381,7 @@ class PortabilityTests(unittest.TestCase):
     def _cli_without_html_parser(self, *arguments):
         code = (
             "import sys; sys.modules['bs4'] = None; sys.path.insert(0, sys.argv[1]); "
-            "from beyondseo.cli import main; raise SystemExit(main(sys.argv[2:]))"
+            "from automate_seo.cli import main; raise SystemExit(main(sys.argv[2:]))"
         )
         return subprocess.run(
             [sys.executable, "-c", code, str(ROOT / "src"), *arguments],
@@ -396,7 +396,7 @@ class PortabilityTests(unittest.TestCase):
         self.assertIn("runtime_checks", result.stdout)
 
     def test_doctor_gives_setup_steps_when_html_parser_is_missing(self):
-        from beyondseo import doctor
+        from automate_seo import doctor
 
         with patch.object(doctor.importlib.metadata, "version", side_effect=_package_missing):
             report = doctor.environment_report()

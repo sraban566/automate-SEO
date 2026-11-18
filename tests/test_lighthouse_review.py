@@ -7,8 +7,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from beyondseo.cli import main
-from beyondseo.review import lighthouse_review
+from automate_seo.cli import main
+from automate_seo.review import lighthouse_review
 
 
 class LighthouseReviewTests(unittest.TestCase):

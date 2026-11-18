@@ -8,8 +8,8 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from beyondseo.cli import main
-from beyondseo.research_cli import setup_agents, swarm_plan
+from automate_seo.cli import main
+from automate_seo.research_cli import setup_agents, swarm_plan
 
 
 class SwarmPlanTests(unittest.TestCase):

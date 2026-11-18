@@ -6,7 +6,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from beyondseo.reports import (
+from automate_seo.reports import (
     PDFUnavailable,
     asset,
     export_report,
@@ -55,7 +55,9 @@ class ReportTests(unittest.TestCase):
         self.assertEqual(data["client"], '<script>alert("x")</script>')
 
     def test_missing_pdf_dependency_preserves_html_and_reports_precise_limit(self):
-        with patch("beyondseo.reports.pdf_report", side_effect=PDFUnavailable("missing reportlab")):
+        with patch(
+            "automate_seo.reports.pdf_report", side_effect=PDFUnavailable("missing reportlab")
+        ):
             result = export_report(sample(), self.out)
         self.assertEqual(result["status"], "html_only")
         self.assertIn("missing reportlab", result["pdf_limitation"])
@@ -102,7 +104,7 @@ class ReportTests(unittest.TestCase):
     def test_failed_explicit_overwrite_does_not_leave_a_stale_pdf(self):
         (self.out / "report.pdf").write_bytes(b"old client's output")
         with patch(
-            "beyondseo.reports.pdf_report", side_effect=PDFUnavailable("unsupported script")
+            "automate_seo.reports.pdf_report", side_effect=PDFUnavailable("unsupported script")
         ):
             result = export_report(sample(), self.out, overwrite=True)
         self.assertEqual(result["status"], "html_only")

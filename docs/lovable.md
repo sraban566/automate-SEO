@@ -6,7 +6,7 @@ Use this host guide after importing automate-SEO as a workspace skill. It adapts
 
 Follow [the native import steps](agent-installation.md#lovable). Import the full prepared bundle, select `/automate-seo` in the project chat and check its attached skill chip. Reading a GitHub URL is not skill registration. Unpublished local changes require the prepared local bundle; a GitHub import uses the published version.
 
-Resolve the actual imported skill folder. Check `SKILL.md`, `scripts/run.py`, `src/beyondseo`, the logo and the posting catalog. Do not replace project knowledge, other skills or application settings. A connector permission failure does not prevent using an already authorised native workspace import.
+Resolve the actual imported skill folder. Check `SKILL.md`, `scripts/run.py`, `src/automate_seo`, the logo and the posting catalog. Do not replace project knowledge, other skills or application settings. A connector permission failure does not prevent using an already authorised native workspace import.
 
 ## Prepare execution without modifying the app
 

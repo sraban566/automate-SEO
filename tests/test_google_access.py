@@ -13,9 +13,9 @@ from unittest.mock import Mock, patch
 from urllib.error import HTTPError, URLError
 from urllib.parse import parse_qs, urlsplit
 
-from beyondseo import google_access as google
-from beyondseo.cli import main
-from beyondseo.review import lighthouse_review, search_performance
+from automate_seo import google_access as google
+from automate_seo.cli import main
+from automate_seo.review import lighthouse_review, search_performance
 
 
 class GoogleAccessTests(unittest.TestCase):

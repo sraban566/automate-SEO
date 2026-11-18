@@ -11,12 +11,12 @@ from pathlib import Path
 from unittest.mock import patch
 from urllib.parse import urlsplit
 
-from beyondseo.cli import main
-from beyondseo.doctor import check_environment
-from beyondseo.engine import Crawler
-from beyondseo.extract import extract, page_findings
-from beyondseo.network import Config, Transport
-from beyondseo.publishing import LocalStore, apply_change, stage
+from automate_seo.cli import main
+from automate_seo.doctor import check_environment
+from automate_seo.engine import Crawler
+from automate_seo.extract import extract, page_findings
+from automate_seo.network import Config, Transport
+from automate_seo.publishing import LocalStore, apply_change, stage
 
 
 class DepthValidationTests(unittest.TestCase):
@@ -277,9 +277,9 @@ class DepthValidationTests(unittest.TestCase):
             "runtime_checks": {},
         }
         with (
-            patch("beyondseo.doctor.environment_report", return_value=environment),
+            patch("automate_seo.doctor.environment_report", return_value=environment),
             patch(
-                "beyondseo.doctor.tempfile.TemporaryDirectory",
+                "automate_seo.doctor.tempfile.TemporaryDirectory",
                 side_effect=PermissionError("permission denied"),
             ),
             contextlib.redirect_stdout(io.StringIO()) as output,
@@ -297,8 +297,10 @@ class DepthValidationTests(unittest.TestCase):
             "runtime_checks": {},
         }
         with (
-            patch("beyondseo.doctor.environment_report", return_value=environment),
-            patch("beyondseo.network.addresses", side_effect=OSError("name or service not known")),
+            patch("automate_seo.doctor.environment_report", return_value=environment),
+            patch(
+                "automate_seo.network.addresses", side_effect=OSError("name or service not known")
+            ),
             patch.object(Transport, "once") as fetch,
             contextlib.redirect_stdout(io.StringIO()) as output,
         ):
@@ -317,7 +319,7 @@ class DepthValidationTests(unittest.TestCase):
             "runtime_checks": {},
         }
         with (
-            patch("beyondseo.doctor.environment_report", return_value=environment),
+            patch("automate_seo.doctor.environment_report", return_value=environment),
             patch.object(Transport, "once") as fetch,
             contextlib.redirect_stdout(io.StringIO()) as output,
         ):
@@ -335,15 +337,15 @@ class DepthValidationTests(unittest.TestCase):
         draft.write_text('<?php echo "After"; ?>')
         store = LocalStore(site)
         plan = self.root / "plan"
-        with patch("beyondseo.publishing.shutil.which", return_value=None):
+        with patch("automate_seo.publishing.shutil.which", return_value=None):
             with self.assertRaisesRegex(ValueError, "PHP verification blocked"):
                 stage(store, "service.php", draft, plan)
         self.assertFalse(plan.exists())
         passed = subprocess.CompletedProcess([], 0, "No syntax errors", "")
         failed = subprocess.CompletedProcess([], 255, "", "Parse error")
         with (
-            patch("beyondseo.publishing.shutil.which", return_value="php"),
-            patch("beyondseo.publishing.subprocess.run", side_effect=[passed, failed]) as run,
+            patch("automate_seo.publishing.shutil.which", return_value="php"),
+            patch("automate_seo.publishing.subprocess.run", side_effect=[passed, failed]) as run,
         ):
             result = stage(store, "service.php", draft, plan)
             with self.assertRaisesRegex(ValueError, "PHP syntax check failed"):

@@ -8,8 +8,8 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from beyondseo.cli import main
-from beyondseo.review import entity_review
+from automate_seo.cli import main
+from automate_seo.review import entity_review
 
 
 class EntityReviewTests(unittest.TestCase):

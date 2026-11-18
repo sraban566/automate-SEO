@@ -18,7 +18,7 @@ class HostingTransportTests(unittest.TestCase):
 
         import paramiko
 
-        from beyondseo.publishing import RemoteStore, apply_change, stage
+        from automate_seo.publishing import RemoteStore, apply_change, stage
 
         class Auth(paramiko.ServerInterface):
             def check_auth_password(self, u, p):
@@ -163,7 +163,7 @@ class HostingTransportTests(unittest.TestCase):
         from pyftpdlib.handlers import TLS_FTPHandler
         from pyftpdlib.servers import FTPServer
 
-        from beyondseo.publishing import RemoteStore, apply_change, stage
+        from automate_seo.publishing import RemoteStore, apply_change, stage
 
         self.addCleanup(logging.disable, logging.root.manager.disable)
         logging.disable(logging.CRITICAL)
@@ -253,7 +253,9 @@ class HostingTransportTests(unittest.TestCase):
                     pass
                 context = ssl.create_default_context(cafile=str(certfile))
                 assert context.verify_mode == ssl.CERT_REQUIRED and context.check_hostname
-                with patch("beyondseo.publishing.ssl.create_default_context", return_value=context):
+                with patch(
+                    "automate_seo.publishing.ssl.create_default_context", return_value=context
+                ):
                     store = RemoteStore(profile)
                 try:
                     result = stage(store, "index.html", draft, root / "plan")

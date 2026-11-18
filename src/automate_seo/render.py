@@ -50,7 +50,7 @@ def render_page(page, crawler):
             try:
                 browser = p.chromium.launch(headless=c.headless)
                 context = browser.new_context(
-                    user_agent="automate-seo/3.0 (Chromium; +https://github.com/sraban566/automate-SEO)",
+                    user_agent="automate-seo/4.0 (Chromium; +https://github.com/sraban566/automate-SEO)",
                     viewport={"width": 1440, "height": 1000},
                     locale="en-US",
                     service_workers="block",

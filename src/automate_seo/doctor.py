@@ -213,7 +213,7 @@ def check_environment(target=None, query=None, out=None):
     command = (
         [sys.executable, str(launcher), "doctor"]
         if launcher.is_file()
-        else [sys.executable, "-m", "beyondseo", "doctor"]
+        else [sys.executable, "-m", "automate_seo", "doctor"]
     )
     if target:
         command.extend(["--target", target])

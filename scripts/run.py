@@ -47,7 +47,7 @@ def main():
         return 2
     sys.path.insert(0, str(root / "src"))
     try:
-        from beyondseo.cli import main as cli_main
+        from automate_seo.cli import main as cli_main
     except ModuleNotFoundError as error:
         print(
             f"Missing dependency: {error.name}. Run Python on {root / 'scripts/setup.py'} first.",

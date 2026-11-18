@@ -57,7 +57,7 @@ def text(value):
 
 
 def asset(name):
-    return files("beyondseo").joinpath("report_assets", name).read_bytes()
+    return files("automate_seo").joinpath("report_assets", name).read_bytes()
 
 
 def validate_report(data):

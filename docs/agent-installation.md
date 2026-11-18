@@ -39,7 +39,7 @@ This asks the assistant to do the setup for you. It can use its supported import
 
 1. [Download the latest skill ZIP](https://github.com/sraban566/automate-SEO/releases/latest/download/automate-seo-skill.zip), or use **Prepare the upload from source** below.
 2. Open **Customize → Skills → Create → Upload from your computer**.
-3. Choose `automate-seo-skill.zip` or `automate-seo-<version>-skill.zip`. If automate-SEO is already saved, choose **Replace existing** when prompted. Wait for it to appear in the Skills list, then open it and confirm the supporting files are present, including `docs/website-work.md` and `src/beyondseo/projects.py`.
+3. Choose `automate-seo-skill.zip` or `automate-seo-<version>-skill.zip`. If automate-SEO is already saved, choose **Replace existing** when prompted. Wait for it to appear in the Skills list, then open it and confirm the supporting files are present, including `docs/website-work.md` and `src/automate_seo/projects.py`.
 4. Choose **Try in chat**, use the **Work** surface, and ask it to run the installation check below. A saved skill and a working crawler are separate results.
 
 These controls were exercised in the ChatGPT web interface. Labels and availability can vary by account. Use the native file chooser for a manual upload; no browser extension is needed. An automated browser's file-upload permission error is separate from the skill's save or safety-scan result.
@@ -77,7 +77,7 @@ OpenAI distinguishes workspace skills from local filesystem skills. A copy on yo
 | Chat has skill list/read tools but no save tool | Use the native archive importer above, including **Replace existing** for an update. Missing chat tools do not prove the UI cannot save the skill. |
 | An explicit safety-scan rejection | Read the flagged file/rule, explain the finding and correct the actual issue. Use workspace support if the reason is unavailable. Keep scanning and approval controls enabled. |
 | Permission denied launching Python | Identify which path was denied. Use an execution folder supported by that Work environment with `--venv`; do not place a virtualenv inside a read-only or non-executable skill mount. |
-| Saved skill, missing bundled files | Re-import the complete bundle through the supported workflow and verify a playbook, the catalog and `src/beyondseo/cli.py` are accessible. |
+| Saved skill, missing bundled files | Re-import the complete bundle through the supported workflow and verify a playbook, the catalog and `src/automate_seo/cli.py` are accessible. |
 | Browser cannot launch | Inspect `doctor`; install Chromium/system libraries only where the host permits them. HTTP mode can read initial HTML, but does not establish JavaScript coverage. |
 | Chromium download times out | Retain the official download error. Check for an already available permitted host browser; otherwise continue HTTP/supplied-evidence work. Do not disable TLS or repeatedly download without a bound. |
 | DNS fails while fetching robots | Report the name-resolution failure and the withheld page request separately. It is not a robots disallow or proof the website is offline. Use a permitted host fetch or supplied capture if available. |
@@ -298,8 +298,8 @@ Lovable now documents native workspace skills and GitHub imports. A workspace ow
 
 1. Open **Settings → Skills → Add → Import from GitHub**.
 2. Paste `https://github.com/sraban566/automate-SEO`. For a version not yet published, use the local package/manual route; the public URL cannot fetch unpublished local changes.
-3. For a ZIP, choose **Settings → Skills → Add → Upload ZIP**, browse to the prepared bundle, then choose **Import archive**. Expand **Beyondseo** and inspect **Bundled files**: check `docs/website-work.md`, `src/beyondseo/projects.py`, `scripts/run.py`, the logo and backlink catalog. Use the prepared skill bundle, not an arbitrary repository ZIP with tests and private outputs.
-4. Open the website's project chat, type `/automate-seo`, and select **Beyondseo — Workspace skills**. Confirm the skill chip is attached before sending. Ask it to follow `docs/website-work.md` and inspect the current source and preview before editing.
+3. For a ZIP, choose **Settings → Skills → Add → Upload ZIP**, browse to the prepared bundle, then choose **Import archive**. Expand **automate-SEO** and inspect **Bundled files** for `docs/website-work.md`, `src/automate_seo/projects.py`, `scripts/run.py`, the logo, and the backlink catalog. Upload the prepared skill bundle.
+4. Open the website's project chat, type `/automate-seo`, and select **automate-SEO** under **Workspace skills**. Confirm the skill chip is attached before sending. Ask it to follow `docs/website-work.md` and inspect the current source and preview before editing.
 5. Check the actual tools. Importing Python files does not establish that Python, browser downloads or persistent background workers can run. Use the project's native tools when available and report any missing crawler coverage separately.
 
 You can also ask Lovable's chat:

@@ -21,22 +21,22 @@ flowchart LR
 
 | Path | Responsibility |
 |---|---|
-| `src/beyondseo/cli.py` | Commands, input validation and output lock |
-| `src/beyondseo/network.py` | Configuration, normalized URLs, HTTP transport, pacing and robots rules |
-| `src/beyondseo/engine.py` | Sitemap discovery, SQLite queue, processing and exports |
-| `src/beyondseo/render.py` | Local browser, dependency routing, readiness, scrolling and screenshots |
-| `src/beyondseo/extract.py` | HTML observations, text selection and page finding candidates |
-| `src/beyondseo/content.py` | Common HTML structures converted to Markdown |
-| `src/beyondseo/diagnostics.py` | Access classification and stop reasons |
-| `src/beyondseo/evidence.py` | Shared representation selection, raw noindex preservation and missing-content candidates |
-| `src/beyondseo/backlinks.py` | Source verification, late-link rendering and bounded redirect follow-ups |
-| `src/beyondseo/reputation.py` | Search plans/imports, source review rubric, grouping and estimated reputation reports |
-| `src/beyondseo/discovery.py` | Budgeted provider adapters, host/saved imports, provenance, deduplication and cache |
-| `src/beyondseo/research.py` | Evidence packets, validated profile reviews, query generation and competitor gates |
-| `src/beyondseo/findings.py` | Evidence, business impact and acceptance contracts for audit findings |
-| `src/beyondseo/doctor.py` | Separate runtime and optional target/search probes |
-| `src/beyondseo/reports.py` | Offline branded HTML/PDF presentation of reviewed content and native audit findings |
-| `src/beyondseo/report_assets/` | Packaged product logo and self-contained report styles |
+| `src/automate_seo/cli.py` | Commands, input validation and output lock |
+| `src/automate_seo/network.py` | Configuration, normalized URLs, HTTP transport, pacing and robots rules |
+| `src/automate_seo/engine.py` | Sitemap discovery, SQLite queue, processing and exports |
+| `src/automate_seo/render.py` | Local browser, dependency routing, readiness, scrolling and screenshots |
+| `src/automate_seo/extract.py` | HTML observations, text selection and page finding candidates |
+| `src/automate_seo/content.py` | Common HTML structures converted to Markdown |
+| `src/automate_seo/diagnostics.py` | Access classification and stop reasons |
+| `src/automate_seo/evidence.py` | Shared representation selection, raw noindex preservation and missing-content candidates |
+| `src/automate_seo/backlinks.py` | Source verification, late-link rendering and bounded redirect follow-ups |
+| `src/automate_seo/reputation.py` | Search plans/imports, source review rubric, grouping and estimated reputation reports |
+| `src/automate_seo/discovery.py` | Budgeted provider adapters, host/saved imports, provenance, deduplication and cache |
+| `src/automate_seo/research.py` | Evidence packets, validated profile reviews, query generation and competitor gates |
+| `src/automate_seo/findings.py` | Evidence, business impact and acceptance contracts for audit findings |
+| `src/automate_seo/doctor.py` | Separate runtime and optional target/search probes |
+| `src/automate_seo/reports.py` | Offline branded HTML/PDF presentation of reviewed content and native audit findings |
+| `src/automate_seo/report_assets/` | Packaged product logo and self-contained report styles |
 | `playbooks/` | SEO methods, templates, examples and industry guidance |
 | `tests/` | Local HTTP/browser fixtures and regression cases |
 

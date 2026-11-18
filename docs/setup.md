@@ -139,7 +139,7 @@ Version 2.1 adds crawl settings and output fields. Start a fresh output folder f
 
 | Message or symptom | What to do |
 |---|---|
-| `automate-seo: command not found` | Activate `.venv`, or use `.venv/bin/automate-seo` / `.venv\Scripts\beyondseo.exe` directly |
+| `automate-seo: command not found` | Activate `.venv`, or use `.venv/bin/automate-seo` / `.venv\Scripts\automate_seo.exe` directly |
 | Optional rendering dependency missing | Install `.[browser,reports]` inside the active environment |
 | Chromium executable missing | Run `python -m playwright install chromium` with that environment's Python |
 | Chromium download times out or returns a gateway error | Keep the download error separate from skill registration. Check the host's permitted network access to the browser download URL; do not repeat downloads indefinitely. Use `--http-only` setup and `--mode http` for reachable pages while browser setup is unavailable. This does not verify JavaScript content. |

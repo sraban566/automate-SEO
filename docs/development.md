@@ -42,7 +42,7 @@ From reviewed source, run:
 
 ```sh
 python3 scripts/validate_skill.py
-python3 scripts/build_skill.py --out ../release-assets/automate-seo-3.0.0-skill.zip
+python3 scripts/build_skill.py --out ../release-assets/automate-seo-4.0.0-skill.zip
 python3 scripts/build_skill.py --out ../release-assets/automate-seo-skill.zip
 ```
 

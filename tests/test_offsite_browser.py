@@ -9,8 +9,8 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs
 
-from beyondseo import offsite
-from beyondseo.network import utcnow
+from automate_seo import offsite
+from automate_seo.network import utcnow
 
 
 class PublishingFormTests(unittest.TestCase):

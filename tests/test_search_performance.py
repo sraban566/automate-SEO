@@ -7,8 +7,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from beyondseo.cli import main
-from beyondseo.review import search_performance
+from automate_seo.cli import main
+from automate_seo.review import search_performance
 
 
 class SearchPerformanceTests(unittest.TestCase):

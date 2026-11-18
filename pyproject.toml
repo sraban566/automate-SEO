@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "automate-seo"
-version = "3.0.0"
+version = "4.0.0"
 description = "An open-source AI SEO skill for website audits, SEO/AEO/GEO, content, competitor research and backlinks, with its own crawler."
 readme = "README.md"
 license = "MIT"
@@ -30,7 +30,7 @@ dev = ["ruff>=0.11,<1", "reportlab>=4.2,<5", "pypdf>=5,<7", "google-auth-oauthli
 hosting-test = ["paramiko>=3.4,<5", "pyftpdlib>=2,<3", "pyOpenSSL>=24,<27"]
 
 [project.scripts]
-automate-seo = "beyondseo.cli:main"
+automate-seo = "automate_seo.cli:main"
 
 [project.urls]
 Repository = "https://github.com/sraban566/automate-SEO"
@@ -42,7 +42,7 @@ Changelog = "https://github.com/sraban566/automate-SEO/blob/main/CHANGELOG.md"
 where = ["src"]
 
 [tool.setuptools.package-data]
-beyondseo = ["report_assets/*.png", "report_assets/*.css"]
+automate_seo = ["report_assets/*.png", "report_assets/*.css"]
 
 [tool.ruff]
 target-version = "py310"

@@ -10,9 +10,9 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from beyondseo.backlinks import import_browser_evidence
-from beyondseo.cli import main
-from beyondseo.reputation import assess
+from automate_seo.backlinks import import_browser_evidence
+from automate_seo.cli import main
+from automate_seo.reputation import assess
 
 
 class HostBrowserEvidenceTests(unittest.TestCase):

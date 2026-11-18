@@ -1,82 +1,153 @@
-# automate-SEO
+<div align="center">
+  <img src="assets/automate-seo-logo.png" width="380" alt="automate-SEO">
+  <h1>Make your website easier to find and cite</h1>
+  <p>Audit JavaScript websites, find search and content gaps, and turn the evidence into fixes you can review.</p>
+  <p>
+    <a href="https://github.com/sraban566/automate-SEO/releases/latest"><img src="https://img.shields.io/github/v/release/sraban566/automate-SEO?style=flat-square&color=991B1B" alt="Latest release"></a>
+    <a href="https://github.com/sraban566/automate-SEO/actions/workflows/tests.yml"><img src="https://img.shields.io/github/actions/workflow/status/sraban566/automate-SEO/tests.yml?branch=main&style=flat-square&label=tests" alt="Test status"></a>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-172238?style=flat-square" alt="MIT license"></a>
+    <a href="#quick-start"><img src="https://img.shields.io/badge/Python-3.10%2B-172238?style=flat-square" alt="Python 3.10 or newer"></a>
+  </p>
+  <p>
+    <a href="#quick-start">Install</a> &nbsp;·&nbsp;
+    <a href="#what-you-get">See what it does</a> &nbsp;·&nbsp;
+    <a href="#copy-a-prompt">Copy a prompt</a> &nbsp;·&nbsp;
+    <a href="#automate-audits-in-github">Set up GitHub Actions</a>
+  </p>
+</div>
 
-A local SEO, Answer Engine Optimization (AEO), and Generative Engine Optimization (GEO) audit engine. Run it from a terminal, GitHub Actions, or a coding agent with shell access.
+**automate-SEO** is an open-source toolkit for technical SEO, answer engine optimization (AEO), and generative engine optimization (GEO). Use it from a terminal or with a coding assistant. The crawler runs locally and needs no paid API key.
 
-## Quickstart
+## Quick start
 
-Requires Python 3.10 or newer. The HTTP crawler and health checks run without API keys.
+### Use it with your assistant
+
+Download the [latest skill ZIP](https://github.com/sraban566/automate-SEO/releases/latest/download/automate-seo-skill.zip) for hosts that support skill uploads, or install it from a checkout. Follow the guide for [Codex](docs/agent-installation.md#codex), [Claude Code](docs/agent-installation.md#claude-code), or [Cursor](docs/agent-installation.md#cursor). Run the diagnostic in the assistant's actual execution environment.
+
+```text
+Install automate-SEO from https://github.com/sraban566/automate-SEO.
+Follow docs/agent-installation.md for this host and run doctor.
+Then audit https://example.com and summarize the most important findings.
+```
+
+<details open>
+<summary><strong>Run it from your terminal</strong></summary>
+
+Use Python 3.10 or newer. Create and activate a virtual environment. On Windows PowerShell, activate it with `.venv\Scripts\Activate.ps1`.
 
 ```sh
 git clone https://github.com/sraban566/automate-SEO.git
 cd automate-SEO
 python -m venv .venv
-# Linux/macOS
 source .venv/bin/activate
-# Windows PowerShell uses .\.venv\Scripts\Activate.ps1
-python -m pip install -e .
+python -m pip install -e ".[browser]"
+python -m playwright install chromium
 automate-seo doctor
-automate-seo health --url https://example.com --out runs/example --max-pages 5
+automate-seo health --url https://example.com --mode auto --out runs/example
 ```
 
-With uv, run `uv sync` and prefix commands with `uv run`. For JavaScript-rendered pages, run `uv sync --extra browser` and `uv run playwright install chromium`, then pass `--mode auto` or `--mode browser` to the audit. With pip, install `-e ".[browser]"` and run `python -m playwright install chromium`. You can also invoke any command via `python scripts/run.py` with an installed runtime.
+With uv, run `uv sync --extra browser`, `uv run playwright install chromium`, then prefix the audit command with `uv run`. Open `runs/example/health.html` to review the report. Use a fresh output directory for each live audit.
 
-Use a fresh output directory for each live health audit. The preserved `crawl --resume` interface continues an existing crawl using its SQLite frontier. `health --crawl` replays a saved snapshot offline.
+</details>
 
-## Architecture
-
-1. `scripts/run.py` chooses the configured Python environment and calls the CLI. The crawler discovers URLs from robots, sitemaps, and observed links, then queues them in SQLite.
-2. Bounded HTTP workers fetch pages. Optional Chromium renders JavaScript under the same transport constraints. The crawler retains raw and rendered observations, coverage, and the source links for findings.
-3. Four composable stages consume the evidence. The Technical Auditor checks availability, canonical destinations, page metadata, and crawler rules. The Content & Schema Architect checks extractable answers and JSON-LD. The Competitor & Entity Gap Researcher finds schema comparisons in supplied competitor crawls. The Backlink & Digital PR Strategist uses verified reputation evidence and flags missing inputs.
-4. The report writer emits `health.json`, `health.md`, and offline `health.html`. The findings include estimated impact and effort, plus an action tied to the observed page.
-
-See the [upstream architecture audit](docs/upstream-audit.md), [module map](docs/architecture.md), and [command and integration guides](docs/README.md). The legacy Python module name `beyondseo` is retained for API compatibility.
-
-## AI-search checks
-
-- **AI guidance files.** Generate `llms.txt` and a bounded `llms-full.txt` companion from reviewed crawl captures. Validation checks Markdown structure and link syntax. The live health check also probes the public files. The llms.txt format is a proposal for agent-readable guidance. Provider inclusion depends on each search system. [llms.txt proposal](https://llmstxt.org/), [Google AI search guidance](https://developers.google.com/search/docs/appearance/ai-features)
-- **Entity graphs.** Validate nested JSON-LD types, repeated `@id` declarations, same-document references, `sameAs` links, and fields for Organization, FAQPage, HowTo, Article and Product. The offline checks cover a defined subset of Schema.org and leave factual verification and search-feature eligibility to review. [Schema.org vocabulary](https://schema.org/)
-- **Citation readiness.** Score visible concise answers, semantic HTML, factual markers, and citation hooks from 0 to 100. Scores estimate extractability. Actual AI citations and share of voice require dated samples from answer engines. Snapshots created before the new DOM signals require a fresh crawl for scoring.
-- **Robots policy.** Report the declared search rules for OAI-SearchBot, Claude-SearchBot, PerplexityBot and Googlebot, with separate fields for training, product controls, and user-activated agents. An allow rule describes the captured policy. It does not establish provider access through a CDN or actual indexing. [OpenAI crawlers](https://developers.openai.com/api/docs/bots), [Anthropic crawlers](https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler), [Perplexity crawlers](https://docs.perplexity.ai/docs/resources/perplexity-crawlers), [Google crawlers](https://developers.google.com/crawling/docs/crawlers-fetchers/overview-google-crawlers)
+<details>
+<summary><strong>Run the GitHub container package</strong></summary>
 
 ```sh
-automate-seo health --crawl runs/example/crawl --out runs/review --fail-on none
-automate-seo entity-review --crawl runs/example/crawl --out runs/entities
-automate-seo llms generate --crawl runs/example/crawl --out runs/llms
-automate-seo llms validate runs/llms/llms.txt --url https://example.com/llms.txt
-automate-seo llms validate runs/llms/llms-full.txt --url https://example.com/llms-full.txt --full
+docker run --rm ghcr.io/sraban566/automate-seo:4.0.0 doctor
 ```
 
-Pass `--competitor-crawl` once per previously captured competitor and optionally `--reputation path/to/reputation.json`. Use `--research-queries queries.json --brand "Your Brand"` to run bounded native search and verify up to six source pages as part of the audit. The query file uses the [reviewed discovery format](docs/discovery-and-competitors.md). Returned URLs are leads and each verified result retains its source observations. The [backlink catalog](docs/backlink-source-catalog.md) provides additional outreach leads.
+The image includes Chromium and the PDF renderer. For an audit, mount a writable directory or a named volume at `/work` to keep the reports after the container exits.
 
-## Agents and Git patches
+```sh
+docker run --rm -v automate-seo-reports:/work ghcr.io/sraban566/automate-seo:4.0.0 \
+  health --url https://example.com --mode auto --out /work/example
+```
 
-Use `automate-seo agent tools.list` for the available tools. The CLI and newline-delimited JSON-RPC interface expose the same local tool contracts. These commands are ready to call from Claude Code, Codex, Cursor, or a framework wrapper with terminal access.
+</details>
 
-| Tool | Named parameters |
+## What you get
+
+| Find issues | Improve what search engines can read | Check evidence and fixes |
+| --- | --- | --- |
+| Inspect status codes, canonicals, metadata, crawler rules, rendered HTML and structured data. | Validate nested JSON-LD entity graphs, score citation readiness, and draft `llms.txt` and `llms-full.txt` from captured pages. | Compare entities from competitor crawls, verify a sample of backlink leads, and stage reviewed metadata and schema changes as Git diffs. |
+
+Every health run exports a standalone HTML dashboard, Markdown, and structured JSON. Findings include the affected URL, evidence, estimated impact and effort, and a next action.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/sraban566/automate-SEO/main/.github/automate-seo-dashboard.png" width="1000" alt="Sample automate-SEO dashboard showing audit coverage, citation readiness, and prioritized findings">
+</p>
+
+*Example dashboard generated from a local test fixture.*
+
+## Copy a prompt
+
+<details open>
+<summary><strong>Find the most important SEO fixes</strong></summary>
+
+```text
+Run automate-seo health on https://example.com. Render JavaScript if needed.
+Give me the top three issues, the URLs and capture evidence, and how to verify each fix.
+```
+
+</details>
+
+<details>
+<summary><strong>Make a page easier for answer engines to use</strong></summary>
+
+```text
+Use the saved audit to check the homepage's JSON-LD and citation readiness.
+Draft a direct answer to the customer question and flag claims that need a primary source.
+Prepare llms.txt and llms-full.txt from the reviewed capture and validate both drafts.
+```
+
+</details>
+
+<details>
+<summary><strong>Review a metadata or schema change</strong></summary>
+
+```text
+Use automate-seo agent schema-fix with these approved values.
+Show the Git diff for the relevant HTML, Next.js or React file and the verification steps.
+```
+
+</details>
+
+## How it works
+
+The Python crawler collects robots, sitemap and link evidence in a resumable SQLite queue. HTTP workers fetch pages, and optional Chromium captures JavaScript content under the same request and robots constraints. Four stages interpret the evidence for technical findings, content and schema, competitor entity gaps, and backlink and digital PR opportunities. Citation readiness measures extractability from the capture. Actual citations and share of voice require observations of answers in the relevant engines. [Architecture](docs/architecture.md) · [Evidence and measurement](references/measurement-boundaries.md)
+
+### Useful commands
+
+| Command | What it does |
 | --- | --- |
-| `audit` | `crawl_dir` |
-| `content-brief` | `crawl_dir`, `url`, optional `question` |
-| `schema-fix` | `repo`, `file`, `changes`, optional `framework` |
+| `automate-seo health --crawl runs/example/crawl --out runs/review` | Replay captured evidence offline. |
+| `automate-seo entity-review --crawl runs/example/crawl --out runs/entities` | Inspect identity and schema evidence across pages. |
+| `automate-seo llms generate --crawl runs/example/crawl --out runs/llms` | Draft and validate AI guidance files. |
+| `automate-seo llms validate runs/llms/llms.txt --url https://example.com/llms.txt` | Validate a guidance file and its link syntax. |
+| `automate-seo agent tools.list` | List the audit, schema-fix and content-brief tools. |
+| `automate-seo rpc` | Serve the same tools over newline-delimited JSON-RPC. |
 
-For the CLI, save the named parameters as a JSON object and run `automate-seo agent content-brief --input brief.json`. For a subprocess integration, start `automate-seo rpc` and send one UTF-8 JSON-RPC request per line. Read one JSON response for each request with an ID. The stdio server implements this local JSON-RPC contract and can sit behind an MCP adapter.
+To review a competitor, pass `--competitor-crawl` for each capture. Use `--research-queries queries.json --brand "Your Brand"` to discover leads and verify a bounded sample, or import `--reputation` evidence. [Discovery guide](docs/discovery-and-competitors.md) · [Backlink catalog](docs/backlink-source-catalog.md)
+
+<details>
+<summary><strong>Agent API and reviewed Git patches</strong></summary>
+
+Pass a JSON file of named arguments to `automate-seo agent <tool> --input params.json`, or send this line to the `rpc` subprocess.
 
 ```json
 {"jsonrpc":"2.0","id":1,"method":"audit","params":{"crawl_dir":"runs/example/crawl"}}
 ```
 
-`schema-fix` accepts explicitly reviewed `title`, `description`, `canonical`, and `schema` values. Choose `html`, `next`, or `react` for a clean tracked source file relative to the Git root. HTML edits target the head. For Next.js App Router metadata, place a standalone `// automate-seo:metadata` line at module scope of a server route file. For React 19 metadata, place a standalone JSX comment `{/* automate-seo:metadata */}` in the page component. For JSON-LD, place `{/* automate-seo:schema */}` in the intended component. Existing structured data requires a deliberate merge. The tool returns an apply-checked diff and a fingerprint. Review the diff and run the site's own build in a review branch before deploying.
+`schema-fix` takes a Git root, tracked source file, approved `changes` and optional `framework`. The HTML helper updates scoped head metadata. For Next.js App Router metadata, place a standalone `// automate-seo:metadata` at module scope. For React 19, put `{/* automate-seo:metadata */}` in the relevant component. For JSON-LD, use `{/* automate-seo:schema */}` in the intended component. Existing schema needs a deliberate merge. [Website work](docs/website-work.md)
 
-Example prompts:
+</details>
 
-- **Claude Code:** “Run `automate-seo health` on my staging site. Summarize the three highest-impact findings and the URL evidence.”
-- **Codex:** “Call `automate-seo agent schema-fix` with these approved values. Show me the Next.js Git diff and describe the verification steps.”
-- **Cursor:** “Use `automate-seo agent content-brief` to plan an answer-first update from the saved crawl. Cite the supplied primary sources for factual claims.”
+## Automate audits in GitHub
 
-## GitHub Actions
+The [SEO workflow](https://github.com/sraban566/automate-SEO/blob/main/.github/workflows/seo-audit.yml) runs on pushes to `main`, on a weekly schedule and by manual dispatch. Set the repository variable `SEO_AUDIT_URLS` to one public URL per line, up to ten. The workflow uses Chromium with first-party assets and uploads the three report formats even when the gate fails.
 
-The [SEO workflow](https://github.com/sraban566/automate-SEO/blob/main/.github/workflows/seo-audit.yml) runs on pushes to `main`, weekly on Monday at 04:23 UTC, and on manual dispatch. Configure the repository variable `SEO_AUDIT_URLS` with one public URL per line, up to ten. The job renders each page in Chromium with first-party assets, a 45-second fetch and render timeout, and a ten-page budget per target. It uploads the three report formats even when the gate fails. Use public URLs and content suitable for inclusion in GitHub workflow reports.
-
-`SEO_FAIL_ON` defaults to `critical`. Choose `warning` to also fail for metadata or schema warnings, or `none` for reporting only. Zero scorable pages raises a critical coverage finding and fails either active gate even when the baseline also had zero coverage. Optionally commit a reviewed `health.json` as `.github/seo-baselines/target-1.json` and repeat by target position. With a baseline, other findings fail the gate when they are new or have increased to the selected threshold. Stable existing findings still appear in the report.
+`SEO_FAIL_ON` accepts `critical`, `warning` and `none` for report-only mode. Zero scorable pages raises a critical coverage finding and fails either active gate. Save a reviewed baseline at `.github/seo-baselines/target-1.json` to report new or escalated findings at the chosen threshold. [Full documentation](docs/README.md)
 
 ## Development
 
@@ -88,7 +159,8 @@ ruff format --check .
 python -m unittest discover -s tests -v
 python scripts/check_docs.py
 python scripts/validate_skill.py
-automate-seo doctor
 ```
 
-MIT licensed. Original copyright and source attribution are in [LICENSE](LICENSE) and [NOTICE](NOTICE).
+Python library imports use `automate_seo`. Version 4 moves the public module namespace to match the project. [Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md)
+
+MIT licensed. Original project attribution is recorded in [LICENSE](LICENSE) and [NOTICE](NOTICE).

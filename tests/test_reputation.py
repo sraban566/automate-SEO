@@ -6,8 +6,14 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from beyondseo.backlinks import source_rows
-from beyondseo.reputation import assess, import_search_html, reputation, search_plan, source_score
+from automate_seo.backlinks import source_rows
+from automate_seo.reputation import (
+    assess,
+    import_search_html,
+    reputation,
+    search_plan,
+    source_score,
+)
 
 TARGET = "https://example.com/"
 
@@ -194,7 +200,8 @@ class ReputationTests(unittest.TestCase):
             evidence = root / "evidence.json"
             evidence.write_text(json.dumps(payload))
             with patch(
-                "beyondseo.reputation.check_sources", side_effect=AssertionError("Unexpected fetch")
+                "automate_seo.reputation.check_sources",
+                side_effect=AssertionError("Unexpected fetch"),
             ):
                 result = reputation(None, TARGET, "Example", root / "report", evidence=evidence)
                 self.assertTrue(result["reused_evidence"])

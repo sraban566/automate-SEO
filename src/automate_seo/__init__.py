@@ -1,6 +1,6 @@
 """automate-SEO — website crawling, readable content and SEO evidence."""
 
-__version__ = "3.0.0"
+__version__ = "4.0.0"
 __all__ = ["Config", "Crawler", "__version__"]
 
 
