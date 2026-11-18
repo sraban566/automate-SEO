@@ -3,6 +3,7 @@ automate-SEO
 Derived from BeyondSEO at upstream commit d9475e6d2dd031258fffd84b42c2fe041013116b.
 Original project: https://github.com/beyondtahir/beyondseo
 Copyright (c) 2026 Muhammad Tahir Ashraf (Beyond Tahir).
+Copyright (c) 2026 Md Shariful Islam (contributions to automate-SEO).
 
 The original MIT copyright and permission notice is preserved in LICENSE.
 The fork adds the SEO and AI-search health pipeline, JSON-RPC tooling, and
