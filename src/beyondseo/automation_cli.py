@@ -18,6 +18,15 @@ def register(sub):
     health.add_argument("--out", type=Path, required=True)
     health.add_argument("--max-pages", type=int, default=10)
     health.add_argument("--mode", choices=("http", "auto", "browser"), default="http")
+    health.add_argument(
+        "--timeout", type=float, default=10, help="Seconds per fetch or page render."
+    )
+    health.add_argument(
+        "--browser-assets",
+        choices=("public", "allowlist"),
+        default="public",
+        help="Load public dependencies or restrict browser requests to the crawl scope.",
+    )
     health.add_argument("--allow-private", action="store_true")
     health.add_argument("--competitor-crawl", type=Path, action="append", default=[])
     health.add_argument("--reputation", type=Path)
@@ -60,6 +69,8 @@ def execute(args):
             out=args.out,
             max_pages=args.max_pages,
             mode=args.mode,
+            timeout=args.timeout,
+            browser_assets=args.browser_assets,
             allow_private=args.allow_private,
             competitors=args.competitor_crawl,
             reputation=args.reputation,

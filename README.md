@@ -74,9 +74,9 @@ Example prompts:
 
 ## GitHub Actions
 
-The [SEO workflow](https://github.com/sraban566/automate-SEO/blob/main/.github/workflows/seo-audit.yml) runs on pushes to `main`, weekly on Monday at 04:23 UTC, and on manual dispatch. Configure the repository variable `SEO_AUDIT_URLS` with one public URL per line, up to ten. The job runs in HTTP mode with a ten-page budget per target and uploads the three report formats. Use public URLs and content suitable for inclusion in GitHub workflow reports.
+The [SEO workflow](https://github.com/sraban566/automate-SEO/blob/main/.github/workflows/seo-audit.yml) runs on pushes to `main`, weekly on Monday at 04:23 UTC, and on manual dispatch. Configure the repository variable `SEO_AUDIT_URLS` with one public URL per line, up to ten. The job renders each page in Chromium with first-party assets, a 45-second fetch and render timeout, and a ten-page budget per target. It uploads the three report formats even when the gate fails. Use public URLs and content suitable for inclusion in GitHub workflow reports.
 
-`SEO_FAIL_ON` defaults to `critical`. Choose `warning` to also fail for metadata or schema warnings, or `none` for reporting only. Critical examples include confirmed broken canonicals and declared search-bot blocks. Optionally commit a reviewed `health.json` as `.github/seo-baselines/target-1.json` and repeat by target position. With a baseline, the gate fails for new or increased findings at the selected threshold. Stable existing findings still appear in the report.
+`SEO_FAIL_ON` defaults to `critical`. Choose `warning` to also fail for metadata or schema warnings, or `none` for reporting only. Zero scorable pages raises a critical coverage finding and fails either active gate even when the baseline also had zero coverage. Optionally commit a reviewed `health.json` as `.github/seo-baselines/target-1.json` and repeat by target position. With a baseline, other findings fail the gate when they are new or have increased to the selected threshold. Stable existing findings still appear in the report.
 
 ## Development
 

@@ -98,6 +98,21 @@ def health_report(
         backlink_digital_pr_strategist=backlink_digital_pr_strategist(reputation),
     )
     findings = technical["findings"] + content["findings"]
+    measured = [
+        p["citation_readiness"]["score"]
+        for p in content["pages"]
+        if p["citation_readiness"]["score"] is not None
+    ]
+    if not measured:
+        findings.append(
+            issue(
+                "no_scorable_pages",
+                seed,
+                "critical",
+                "No captured page could be scored for citation readiness.",
+                "Inspect capture coverage and render diagnostics, then repeat the audit.",
+            )
+        )
     if not pages:
         findings.append(
             issue(
@@ -136,11 +151,6 @@ def health_report(
         unique.values(),
         key=lambda f: (-f["impact"], -f["priority"], f["code"], f["url"], f["subject"]),
     )
-    measured = [
-        p["citation_readiness"]["score"]
-        for p in content["pages"]
-        if p["citation_readiness"]["score"] is not None
-    ]
     return dict(
         format_version=1,
         target=seed,
@@ -204,6 +214,8 @@ def run_audit(
     out=None,
     max_pages=10,
     mode="http",
+    timeout=10,
+    browser_assets="public",
     allow_private=False,
     competitors=(),
     reputation=None,
@@ -234,7 +246,8 @@ def run_audit(
             max_sitemaps=5,
             max_depth=3,
             max_discovered=1000,
-            timeout=10,
+            timeout=timeout,
+            render_asset_policy=browser_assets,
             retries=0,
             save_html=False,
             selection="priority",
@@ -279,10 +292,12 @@ def evaluate_gate(report, level, baseline=None):
         for f in report["findings"]
         if severity[f["severity"]] > previous.get((f["code"], f["url"], f["subject"]), -1)
     ]
+    coverage_failed = report["coverage"]["readiness_scored"] == 0
     return {
         "threshold": level,
         "baseline_used": baseline is not None,
         "new_or_escalated": len(increases),
+        "coverage_failed": coverage_failed,
         "failed": level != "none"
-        and any(severity[f["severity"]] >= severity[level] for f in increases),
+        and (coverage_failed or any(severity[f["severity"]] >= severity[level] for f in increases)),
     }

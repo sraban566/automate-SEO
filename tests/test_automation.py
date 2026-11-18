@@ -12,6 +12,7 @@ from unittest.mock import patch
 from beyondseo.agent_tools import handle_request
 from beyondseo.cli import main
 from beyondseo.entity_graph import graph_audit
+from beyondseo.extract import extract
 from beyondseo.git_patch import git_patch
 from beyondseo.health import evaluate_gate, research_sources, run_audit
 from beyondseo.llms_files import generate, validate_document
@@ -70,6 +71,39 @@ class Site(BaseHTTPRequestHandler):
 
 
 class AutomationTests(unittest.TestCase):
+    def test_zero_scorable_pages_fail_even_if_present_in_baseline(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            crawl = root / "crawl"
+            crawl.mkdir()
+            paths = {
+                "summary.json": {"seed": HOST},
+                "robots.json": {HOST.rstrip("/"): {"status": 404}},
+                "pages.jsonl": {
+                    "url": HOST,
+                    "status": 200,
+                    "data": extract(
+                        '<html><body><script src="/app.js"></script></body></html>', HOST
+                    ),
+                },
+            }
+            for file, data in paths.items():
+                (crawl / file).write_text(json.dumps(data) + "\n", encoding="utf-8")
+
+            first = root / "first"
+            command = ["health", "--crawl", str(crawl), "--fail-on", "critical"]
+            self.assertEqual(main([*command, "--out", str(first)]), 1)
+            baseline = first / "health.json"
+            report = json.loads(baseline.read_text(encoding="utf-8"))
+            self.assertEqual(report["coverage"]["readiness_scored"], 0)
+            finding = next(row for row in report["findings"] if row["code"] == "no_scorable_pages")
+            self.assertEqual(finding["severity"], "critical")
+            self.assertIn(finding["detail"], (first / "health.md").read_text(encoding="utf-8"))
+            self.assertIn(finding["detail"], (first / "health.html").read_text(encoding="utf-8"))
+            self.assertEqual(
+                main([*command, "--out", str(root / "second"), "--baseline", str(baseline)]), 1
+            )
+
     def test_research_passes_discovery_evidence_to_bounded_source_verification(self):
         lead = {"url": "https://example.net/story", "verification": "unverified_lead"}
         with (
