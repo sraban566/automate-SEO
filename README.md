@@ -54,13 +54,13 @@ With uv, run `uv sync --extra browser`, `uv run playwright install chromium`, th
 <summary><strong>Run the GitHub container package</strong></summary>
 
 ```sh
-docker run --rm ghcr.io/sraban566/automate-seo:4.0.0 doctor
+docker run --rm ghcr.io/sraban566/automate-seo:4.0.1 doctor
 ```
 
 The image includes Chromium and the PDF renderer. For an audit, mount a writable directory or a named volume at `/work` to keep the reports after the container exits.
 
 ```sh
-docker run --rm -v automate-seo-reports:/work ghcr.io/sraban566/automate-seo:4.0.0 \
+docker run --rm -v automate-seo-reports:/work ghcr.io/sraban566/automate-seo:4.0.1 \
   health --url https://example.com --mode auto --out /work/example
 ```
 

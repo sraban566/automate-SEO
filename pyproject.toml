@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "automate-seo"
-version = "4.0.0"
+version = "4.0.1"
 description = "An open-source AI SEO skill for website audits, SEO/AEO/GEO, content, competitor research and backlinks, with its own crawler."
 readme = "README.md"
 license = "MIT"

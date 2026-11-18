@@ -10,7 +10,7 @@ WORKDIR /opt/automate-seo
 COPY pyproject.toml README.md LICENSE NOTICE THIRD_PARTY_NOTICES.md ./
 COPY src/ ./src/
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends git \
+    && apt-get install -y --no-install-recommends git libatomic1 \
     && python -m pip install --no-cache-dir '.[browser,reports]' \
     && python -m playwright install --with-deps chromium \
     && rm -rf /var/lib/apt/lists/* \

@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.0.1 — Container runtime
+
+- Install Debian's atomic runtime for the bundled Playwright driver in the GitHub container image.
+
 ## 4.0.0 — First GitHub release
 
 - Package the Python API as `automate_seo`. Change library imports from `beyondseo` to `automate_seo`.
