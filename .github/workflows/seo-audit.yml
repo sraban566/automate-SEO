@@ -46,8 +46,9 @@ jobs:
             baseline=".github/seo-baselines/target-$count.json"
             [[ ! -f "$baseline" ]] || args+=(--baseline "$baseline")
             status=0
+            # Leave time for paced first-party asset requests on slower runners.
             automate-seo health --url="$url" --mode browser --browser-assets allowlist \
-              --timeout 45 --max-pages 10 \
+              --timeout 90 --max-pages 10 \
               --out "$out" --fail-on "$SEO_FAIL_ON" "${args[@]}" || status=$?
             if [[ -f "$out/health.md" ]]; then
               cat "$out/health.md" >> "$GITHUB_STEP_SUMMARY"
